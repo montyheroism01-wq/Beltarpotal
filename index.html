@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BELTAR PORTAL - Official Online Application Status Verification System. Check status using Mobile Number or EPIC Voter ID.">
+    <title>BELTAR PORTAL | Application Status Verification</title>
+    
+    <!-- Favicon / Tab Logo -->
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#" class="brand-logo">
+                <div class="logo-icon">
+                    <img src="logo.png" alt="BELTAR PORTAL Logo" class="brand-logo-img">
+                </div>
+                <div class="logo-text">
+                    <span class="brand-name">BELTAR <span class="highlight">PORTAL</span></span>
+                    <span class="brand-tagline">GOVT. CITIZEN SERVICE</span>
+                </div>
+            </a>
+            
+            <div class="nav-actions">
+                <button id="btnSheetCode" class="btn btn-secondary btn-sm" title="Get Google Sheet Code">
+                    <i class="fa-solid fa-code"></i> <span class="hide-mobile">Google Sheet Code</span>
+                </button>
+                <button id="btnSettings" class="btn btn-ghost btn-icon" title="API Settings">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+                <button id="btnThemeToggle" class="btn btn-ghost btn-icon" title="Toggle Theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+        
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-badge">
+                <span class="pulse-dot"></span> Online Verification Services
+            </div>
+            <h1 class="hero-title">BELTAR APPLICATION STATUS</h1>
+            <p class="hero-subtitle">Instantly verify your application status securely using your Mobile Number or EPIC Voter ID.</p>
+        </section>
+
+        <!-- Search Card Component -->
+        <section class="search-section">
+            <div class="search-card">
+                
+                <!-- Search Tabs -->
+                <div class="search-tabs" role="tablist">
+                    <button class="tab-btn active" id="tabMobile" data-type="mobile" role="tab" aria-selected="true">
+                        <i class="fa-solid fa-mobile-screen-button"></i> Mobile Number
+                    </button>
+                    <button class="tab-btn" id="tabEpic" data-type="epic" role="tab" aria-selected="false">
+                        <i class="fa-solid fa-id-card"></i> EPIC No. (Voter ID)
+                    </button>
+                </div>
+
+                <!-- Search Input Form -->
+                <form id="searchForm" class="search-form">
+                    <div class="input-group">
+                        <div class="input-icon" id="searchPrefixIcon">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            class="search-input" 
+                            placeholder="Enter 10-digit Mobile Number (e.g., 743295710)" 
+                            required 
+                            autocomplete="off"
+                        >
+                        <button type="button" id="btnClearSearch" class="btn-clear hidden" title="Clear input">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <button type="submit" id="btnSearch" class="btn btn-primary btn-search">
+                            <span class="btn-text"><i class="fa-solid fa-magnifying-glass"></i> Check Status</span>
+                            <span class="btn-spinner hidden"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Quick Test Samples -->
+                <div class="quick-samples">
+                    <span class="sample-label"><i class="fa-solid fa-bolt"></i> Quick Demo Samples:</span>
+                    <div class="sample-tags">
+                        <button type="button" class="sample-pill" data-value="743295710" data-type="mobile">
+                            📱 743295710
+                        </button>
+                        <button type="button" class="sample-pill" data-value="8001225224" data-type="mobile">
+                            📱 8001225224
+                        </button>
+                        <button type="button" class="sample-pill" data-value="HCL3045382" data-type="epic">
+                            🪪 HCL3045382
+                        </button>
+                        <button type="button" class="sample-pill" data-value="NRC1383892" data-type="epic">
+                            🪪 NRC1383892
+                        </button>
+                    </div>
+                </div>
+
+                <!-- API Status Banner -->
+                <div id="apiStatusBanner" class="api-status-banner">
+                    <i class="fa-solid fa-database"></i> <span id="apiStatusText">Using Built-in Live Demo Dataset</span> 
+                    <a href="#" id="linkConfigApi" class="banner-link">Connect Google Sheet API</a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Search Results Display Section (Hidden by default) -->
+        <section id="resultSection" class="result-section hidden">
+            
+            <!-- Result Container -->
+            <div class="result-card glass-panel" id="resultCard">
+                
+                <!-- Main Status Highlight Banner -->
+                <div class="status-highlight-box" id="statusHighlightBox">
+                    <div class="status-header">
+                        <span class="status-label-text">CURRENT APPLICATION STATUS</span>
+                        <div class="status-badge" id="statusBadge">
+                            <i class="fa-solid fa-circle-check"></i> <span id="statusBadgeText">APPROVED</span>
+                        </div>
+                    </div>
+                    
+                    <div class="status-summary" id="statusSummaryText">
+                        Your application has been officially verified and approved by the competent authority.
+                    </div>
+
+                    <!-- Progress Step Bar -->
+                    <div class="timeline-container">
+                        <div class="timeline-step step-done" id="step1">
+                            <div class="step-icon"><i class="fa-solid fa-file-export"></i></div>
+                            <div class="step-title">Submitted</div>
+                        </div>
+                        <div class="timeline-line line-done" id="line1"></div>
+                        <div class="timeline-step step-done" id="step2">
+                            <div class="step-icon"><i class="fa-solid fa-user-check"></i></div>
+                            <div class="step-title">Field Verified</div>
+                        </div>
+                        <div class="timeline-line line-done" id="line2"></div>
+                        <div class="timeline-step" id="step3">
+                            <div class="step-icon"><i class="fa-solid fa-award"></i></div>
+                            <div class="step-title" id="step3Title">Approval</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Important Applicant Details Grid -->
+                <div class="details-section">
+                    <div class="details-header">
+                        <h2><i class="fa-solid fa-user-shield"></i> Applicant Information Details</h2>
+                        <div class="privacy-notice">
+                            <i class="fa-solid fa-lock"></i> Privacy Protection: Sensitive identifiers show <strong>last 4 digits</strong>
+                        </div>
+                    </div>
+
+                    <div class="details-grid">
+                        
+                        <!-- Applicant Name -->
+                        <div class="detail-item feature-item">
+                            <div class="detail-icon"><i class="fa-solid fa-user"></i></div>
+                            <div class="detail-content">
+                                <span class="detail-label">Applicant Name</span>
+                                <span class="detail-value highlight-value" id="valApplicantName">--</span>
+                            </div>
+                        </div>
+
+                        <!-- Application No -->
+                        <div class="detail-item">
+                            <div class="detail-icon"><i class="fa-solid fa-hashtag"></i></div>
+                            <div class="detail-content">
+                                <span class="detail-label">Application Number</span>
+                                <span class="detail-value masked-field" id="valAppNo">
+                                    <span class="masked-text">●●●●●●●●</span><span class="visible-digits" id="valAppNoDigits">0000</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Number (Last 4 digits visible) -->
+                        <div class="detail-item">
+                            <div class="detail-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+                            <div class="detail-content">
+                                <span class="detail-label">Mobile Number (Last 4 Digits)</span>
+                                <span class="detail-value masked-field" id="valMobile">
+                                    <span class="masked-text">●●●●●●</span><span class="visible-digits" id="valMobileDigits">----</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- EPIC No (Last 4 digits visible) -->
+                        <div class="detail-item">
+                            <div class="detail-icon"><i class="fa-solid fa-address-card"></i></div>
+                            <div class="detail-content">
+                                <span class="detail-label">EPIC No. / Voter ID (Last 4 Digits)</span>
+                                <span class="detail-value masked-field" id="valEpic">
+                                    <span class="masked-text">●●●●●●</span><span class="visible-digits" id="valEpicDigits">----</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Sl. No / Reference -->
+                        <div class="detail-item">
+                            <div class="detail-icon"><i class="fa-solid fa-list-ol"></i></div>
+                            <div class="detail-content">
+                                <span class="detail-label">Serial Record Ref.</span>
+                                <span class="detail-value" id="valSlNo">--</span>
+                            </div>
+                        </div>
+
+                        <!-- Verification Date / Timestamp -->
+                        <div class="detail-item">
+                            <div class="detail-icon"><i class="fa-solid fa-calendar-check"></i></div>
+                            <div class="detail-content">
+                                <span class="detail-label">Verification Timestamp</span>
+                                <span class="detail-value" id="valVerifyDate">Today, Official Record</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Full Address Block -->
+                    <div class="address-card">
+                        <div class="address-header">
+                            <i class="fa-solid fa-location-dot"></i> Registered Resident Address
+                        </div>
+                        <div class="address-text" id="valAddress">
+                            --
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Action Bar -->
+                <div class="result-actions">
+                    <button type="button" id="btnPrintSlip" class="btn btn-emerald btn-lg">
+                        <i class="fa-solid fa-print"></i> Print Official Status Slip
+                    </button>
+                    <button type="button" id="btnNewSearch" class="btn btn-outline btn-lg">
+                        <i class="fa-solid fa-rotate-left"></i> Check Another Record
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Empty / Not Found State -->
+        <section id="notFoundSection" class="not-found-section hidden">
+            <div class="not-found-card glass-panel">
+                <div class="not-found-icon">
+                    <i class="fa-solid fa-magnifying-glass-location"></i>
+                </div>
+                <h3>No Matching Record Found</h3>
+                <p>We could not locate any application record matching your entered query: <strong id="querySearchVal"></strong></p>
+                <div class="tips-box">
+                    <strong><i class="fa-solid fa-lightbulb"></i> Verification Tips:</strong>
+                    <ul>
+                        <li>Make sure your 10-digit mobile number or EPIC Voter ID is correct.</li>
+                        <li>You can also search by typing the last 4 digits of your registered mobile.</li>
+                        <li>Ensure data has been entered correctly into your connected Google Sheet.</li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="resetSearch()">
+                    <i class="fa-solid fa-arrow-left"></i> Try Again
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Google Sheet Code Modal -->
+    <div id="modalSheetCode" class="modal-overlay hidden">
+        <div class="modal-card modal-lg">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fa-solid fa-file-code"></i> Google Sheet Backend Code
+                </div>
+                <button class="modal-close" id="btnCloseSheetModal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">Copy this Google Apps Script code and paste it into your Google Sheet under <strong>Extensions &gt; Apps Script</strong> to enable real-time status checking from your sheet data.</p>
+                
+                <div class="steps-list">
+                    <div class="step-item">
+                        <span class="step-num">1</span>
+                        <span>Open your Google Sheet with columns: <strong>Sl. No., Application No., Applicant Name, Mobile, EPIC No., Application Status, Address</strong>.</span>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-num">2</span>
+                        <span>Click <strong>Extensions &gt; Apps Script</strong>. Replace code in <code>Code.gs</code> with the code below.</span>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-num">3</span>
+                        <span>Click <strong>Deploy &gt; New deployment &gt; Select Web app</strong>. Set <strong>Who has access to "Anyone"</strong>. Copy Web App URL.</span>
+                    </div>
+                </div>
+
+                <div class="code-box-wrapper">
+                    <div class="code-box-header">
+                        <span><i class="fa-brands fa-js"></i> google-apps-script.js (Code.gs)</span>
+                        <button id="btnCopyCode" class="btn btn-sm btn-ghost-white">
+                            <i class="fa-regular fa-copy"></i> Copy Code
+                        </button>
+                    </div>
+                    <pre class="code-box"><code id="codeText"></code></pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btnCloseSheetModal2">Close</button>
+                <button class="btn btn-primary" id="btnOpenConfigFromModal">Enter Web App URL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Settings Modal -->
+    <div id="modalSettings" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fa-solid fa-sliders"></i> Google Sheet API Settings
+                </div>
+                <button class="modal-close" id="btnCloseSettingsModal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="inputApiUrl" class="form-label">Google Apps Script Web App URL</label>
+                    <input 
+                        type="url" 
+                        id="inputApiUrl" 
+                        class="form-control" 
+                        placeholder="https://script.google.com/macros/s/.../exec"
+                    >
+                    <small class="form-help">Enter your published Google Sheet Web App URL here. Leave empty to use the built-in demo dataset.</small>
+                </div>
+
+                <div class="mode-switch-box">
+                    <label class="switch-label">
+                        <input type="checkbox" id="chkUseDemoData" checked>
+                        <span class="slider"></span>
+                        <span class="switch-text">Use Sample Local Demo Data</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btnResetApiUrl">Reset to Demo</button>
+                <button class="btn btn-primary" id="btnSaveSettings">Save Connection</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Printable Slip Modal Container (For Print Preview) -->
+    <div id="printSlipModal" class="print-slip-container hidden">
+        <div class="slip-paper">
+            <div class="slip-header">
+                <div class="slip-gov-seal"><i class="fa-solid fa-shield-halved"></i></div>
+                <h2>BELTAR PORTAL - CITIZEN SERVICE PORTAL</h2>
+                <p>Official Application Status Verification Slip</p>
+                <div class="slip-date" id="slipDate">--</div>
+            </div>
+            
+            <div class="slip-status-box" id="slipStatusBox">
+                STATUS: <span id="slipStatusBadgeText">APPROVED</span>
+            </div>
+
+            <table class="slip-table">
+                <tr>
+                    <th>Applicant Name:</th>
+                    <td id="slipName">--</td>
+                </tr>
+                <tr>
+                    <th>Application No:</th>
+                    <td id="slipAppNo">--</td>
+                </tr>
+                <tr>
+                    <th>Mobile (Last 4 digits):</th>
+                    <td id="slipMobile">--</td>
+                </tr>
+                <tr>
+                    <th>EPIC Voter ID (Last 4 digits):</th>
+                    <td id="slipEpic">--</td>
+                </tr>
+                <tr>
+                    <th>Serial Reference No:</th>
+                    <td id="slipSlNo">--</td>
+                </tr>
+                <tr>
+                    <th>Residential Address:</th>
+                    <td id="slipAddress">--</td>
+                </tr>
+            </table>
+
+            <div class="slip-footer">
+                <div class="qr-box">
+                    <img id="slipQrCode" src="" alt="Verification QR Code" width="90" height="90">
+                    <span>Scan to Verify Online</span>
+                </div>
+                <div class="stamp-box">
+                    <div class="official-seal">BELTAR PORTAL<br>VERIFIED SLIP</div>
+                    <span>Authorized System Signature</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <span>BELTAR PORTAL &copy; 2026</span>
+                <p>Designed for fast, secure citizen application status verification.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#" id="linkFooterSheetCode"><i class="fa-solid fa-code"></i> Get Google Sheet Code</a>
+                <a href="#" id="linkFooterGithub"><i class="fa-brands fa-github"></i> GitHub Repository</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- App JS -->
+    <script src="app.js"></script>
+</body>
+</html>
