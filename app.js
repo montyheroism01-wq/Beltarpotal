@@ -1,242 +1,98 @@
 /**
  * ==============================================================================
- * BELTAR PORTAL - APPLICATION LOGIC & SEARCH ENGINE
+ * BELTAR PORTAL - OFFICIAL APPLICATION STATUS ENGINE
  * ==============================================================================
  */
 
-// Sample Demo Data (Loaded directly from user provided dataset)
-const DEMO_DATA = [
-    {
-        "Sl. No.": "88577",
-        "Application No.": "303100000064",
-        "Applicant Name": "MITA SADHUKHAN",
-        "Mobile": "743295710",
-        "EPIC No.": "HCL3045382",
-        "Application Status": "Approved",
-        "Address": "VILL & POST BHANDARKOLA P.S GOPALNAGAR DIST NORTH 24 PARGANAS PIN743701, P.S: Gopalnagar PS, P.O: Bhandarkola BO"
-    },
-    {
-        "Sl. No.": "88578",
-        "Application No.": "303100001760",
-        "Applicant Name": "Tripti Biswas",
-        "Mobile": "8972511055",
-        "EPIC No.": "HCL2774859",
-        "Application Status": "Approved",
-        "Address": "Raghunathpur, P.S: Gopalnagar PS, P.O: Ram Shankarpur BO"
-    },
-    {
-        "Sl. No.": "88579",
-        "Application No.": "303100004476",
-        "Applicant Name": "NAMITA SARKAR",
-        "Mobile": "9733934817",
-        "EPIC No.": "WB/13/085/249034",
-        "Application Status": "Approved",
-        "Address": "VILL- HARISHPUR, PO- BELTA, PS- GOPALNAGAR, DIST- 24 PARGANAS NORTH, PIN- 743701, P.S: Gopalnagar PS, P.O: Belta BO"
-    },
-    {
-        "Sl. No.": "88580",
-        "Application No.": "303100005887",
-        "Applicant Name": "DIPA DEBNATH PAUL",
-        "Mobile": "7872749273",
-        "EPIC No.": "NRC1383892",
-        "Application Status": "Approved",
-        "Address": "VILL-BHANDARKOLA, P.S: Gopalnagar PS, P.O: Nahata SO"
-    },
-    {
-        "Sl. No.": "88581",
-        "Application No.": "303100005908",
-        "Applicant Name": "Kabita Biswas",
-        "Mobile": "8670533917",
-        "EPIC No.": "NRC1605591",
-        "Application Status": "Approved",
-        "Address": "Raghunathpur, P.S: Gopalnagar PS, P.O: Ram Shankarpur BO"
-    },
-    {
-        "Sl. No.": "88582",
-        "Application No.": "303100009236",
-        "Applicant Name": "LIPIKA SARKAR",
-        "Mobile": "8001225224",
-        "EPIC No.": "HCL3183225",
-        "Application Status": "Verified - Approval Pending",
-        "Address": "VILL- HARISHPUR, P.O - BELTA, P.S - GOPALNAGER, DIST - 24 PARGANAS NORTH, PIN- 743701, P.S: Gopalnagar PS, P.O: Belta BO"
-    },
-    {
-        "Sl. No.": "88583",
-        "Application No.": "303100011221",
-        "Applicant Name": "SANCHITA KARMAKAR DAS",
-        "Mobile": "9932044035",
-        "EPIC No.": "NRC0139535",
-        "Application Status": "Approved",
-        "Address": "SHUKLADURGAPUR, NORTH 24 PARGANAS, SULKA DURGAPUR, WEST BENGAL, 743701, P.S: Gopalnagar PS, P.O: Sulka Durgapur BO"
-    },
-    {
-        "Sl. No.": "88584",
-        "Application No.": "303100011945",
-        "Applicant Name": "BAISHAKHI HAZRA",
-        "Mobile": "7602393030",
-        "EPIC No.": "NEY1717198",
-        "Application Status": "Approved",
-        "Address": "VILLAGE - BELTA, POST - BELTA, P.S - GOPALNAGAR, P.S: Gopalnagar PS, P.O: Belta BO"
-    },
-    {
-        "Sl. No.": "88585",
-        "Application No.": "303100014287",
-        "Applicant Name": "SHYAMALI SARKAR",
-        "Mobile": "9832558057",
-        "EPIC No.": "NRC1267756",
-        "Application Status": "Approved",
-        "Address": "VILL-RAGHUNATHPUR, P.S: Gopalnagar PS, P.O: Ram Shankarpur BO"
-    },
-    {
-        "Sl. No.": "88586",
-        "Application No.": "303100015868",
-        "Applicant Name": "PRIYA DAS",
-        "Mobile": "8759485427",
-        "EPIC No.": "NNR1891662",
-        "Application Status": "Approved",
-        "Address": "VILL- HARISHPUR, P.O-BELTA, P.S- GOPALNAGAR, DIST - PARGANAS NORTH 24, PIN- 743701, P.S: Gopalnagar PS, P.O: Belta BO"
-    },
-    {
-        "Sl. No.": "88587",
-        "Application No.": "303100016211",
-        "Applicant Name": "BANDANA DUTTA",
-        "Mobile": "7872918548",
-        "EPIC No.": "NRC1506443",
-        "Application Status": "Approved",
-        "Address": "VILL RASULPUR PO BHANDER KOLA PS GOPALNAGAR DIST NORTH 24 PARGANAS PIN 743701, P.S: Gopalnagar PS, P.O: Bhander Kola BO"
-    }
-];
+// Production API Endpoint (Hardcoded)
+const API_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwZuCg_r1bQpvCihEjtnJzHiQSuVfi5iIW_5kMeJLVl3UITEl0nEpxnmWHc2-fi68PUrA/exec';
 
-// Google Apps Script Code String (For easy copy modal)
-const GOOGLE_SCRIPT_CODE = `/**
- * BELTAR PORTAL - GOOGLE APPS SCRIPT BACKEND (Code.gs)
- */
-function doGet(e) {
-  try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    var data = sheet.getDataRange().getValues();
-
-    if (data.length < 2) {
-      return createJsonResponse({ status: "error", message: "No data found" });
-    }
-
-    var headers = data[0].map(function(h) { return String(h).trim(); });
-    var records = [];
-
-    for (var i = 1; i < data.length; i++) {
-      var row = data[i];
-      var record = {};
-      for (var j = 0; j < headers.length; j++) {
-        record[headers[j]] = row[j] !== undefined && row[j] !== null ? String(row[j]).trim() : "";
-      }
-      records.push(record);
-    }
-
-    var query = e && e.parameter && e.parameter.query ? String(e.parameter.query).trim().toLowerCase() : "";
-
-    if (query !== "") {
-      var filtered = records.filter(function(item) {
-        var mobile = (item["Mobile"] || item["Mobile No."] || "").toLowerCase();
-        var epic = (item["EPIC No."] || item["EPIC No"] || "").toLowerCase();
-        var appNo = (item["Application No."] || "").toLowerCase();
-        
-        var cleanQuery = query.replace(/\\D/g, "");
-        var cleanMobile = mobile.replace(/\\D/g, "");
-
-        return (cleanQuery !== "" && cleanMobile.includes(cleanQuery)) || mobile.includes(query) || epic.includes(query) || appNo.includes(query);
-      });
-
-      return createJsonResponse({ status: "success", total: filtered.length, data: filtered });
-    }
-
-    return createJsonResponse({ status: "success", total: records.length, data: records });
-
-  } catch (err) {
-    return createJsonResponse({ status: "error", message: err.toString() });
-  }
-}
-
-function createJsonResponse(obj) {
-  var output = ContentService.createTextOutput(JSON.stringify(obj));
-  output.setMimeType(ContentService.MimeType.JSON);
-  return output;
-}`;
-
-// Application State
-let currentSearchType = 'mobile';
+// State
 let currentRecord = null;
-let customApiUrl = localStorage.getItem('beltar_api_url') || '';
-let useDemoData = localStorage.getItem('beltar_use_demo') !== 'false';
+let detectedType = 'auto'; // 'mobile', 'epic', 'app', or 'auto'
 
-// DOM Elements
 document.addEventListener('DOMContentLoaded', () => {
     initApp();
 });
 
 function initApp() {
-    setupTabSwitchers();
+    setupAutoDetector();
     setupFormHandlers();
-    setupModalHandlers();
     setupThemeToggle();
     setupQuickSamples();
-    updateApiStatusBanner();
-
-    // Populate code in modal
-    document.getElementById('codeText').textContent = GOOGLE_SCRIPT_CODE;
 }
 
-// Search Mode Switcher (Mobile vs EPIC)
-function setupTabSwitchers() {
-    const tabMobile = document.getElementById('tabMobile');
-    const tabEpic = document.getElementById('tabEpic');
+// Real-time Auto Detection (Mobile Number vs EPIC Voter ID vs Application No)
+function setupAutoDetector() {
     const searchInput = document.getElementById('searchInput');
+    const detectBadge = document.getElementById('detectBadge');
+    const detectBadgeText = document.getElementById('detectBadgeText');
     const prefixIcon = document.getElementById('searchPrefixIcon');
-
-    tabMobile.addEventListener('click', () => {
-        currentSearchType = 'mobile';
-        tabMobile.classList.add('active');
-        tabEpic.classList.remove('active');
-        tabMobile.setAttribute('aria-selected', 'true');
-        tabEpic.setAttribute('aria-selected', 'false');
-
-        searchInput.placeholder = "Enter Mobile Number (e.g., 743295710)";
-        searchInput.type = "tel";
-        prefixIcon.innerHTML = '<i class="fa-solid fa-phone"></i>';
-        searchInput.focus();
-    });
-
-    tabEpic.addEventListener('click', () => {
-        currentSearchType = 'epic';
-        tabEpic.classList.add('active');
-        tabMobile.classList.remove('active');
-        tabEpic.setAttribute('aria-selected', 'true');
-        tabMobile.setAttribute('aria-selected', 'false');
-
-        searchInput.placeholder = "Enter EPIC Voter ID No. (e.g., HCL3045382)";
-        searchInput.type = "text";
-        prefixIcon.innerHTML = '<i class="fa-solid fa-id-card"></i>';
-        searchInput.focus();
-    });
-}
-
-// Form Handlers & Input Events
-function setupFormHandlers() {
-    const searchForm = document.getElementById('searchForm');
-    const searchInput = document.getElementById('searchInput');
     const btnClearSearch = document.getElementById('btnClearSearch');
 
     searchInput.addEventListener('input', () => {
-        if (searchInput.value.trim() !== '') {
-            btnClearSearch.classList.remove('hidden');
-        } else {
+        const val = searchInput.value.trim();
+
+        if (val === '') {
             btnClearSearch.classList.add('hidden');
+            resetBadge();
+            return;
+        }
+
+        btnClearSearch.classList.remove('hidden');
+
+        // Check if value is pure numbers or contains letters/slashes
+        const isPureDigits = /^\d+$/.test(val);
+        const hasLetters = /[a-zA-Z]/.test(val);
+        const hasSlash = val.includes('/');
+
+        detectBadge.className = 'detect-badge';
+
+        if (hasLetters || hasSlash || (val.length <= 12 && !isPureDigits)) {
+            // EPIC Voter ID Mode (e.g. HCL3045382, WB/13/085/249034)
+            detectedType = 'epic';
+            detectBadge.classList.add('epic-mode');
+            detectBadgeText.innerHTML = '<i class="fa-solid fa-id-card"></i> 🪪 EPIC Voter ID Detected';
+            prefixIcon.innerHTML = '<i class="fa-solid fa-id-card"></i>';
+        } else if (isPureDigits && (val.length === 10 || val.length === 9 || val.length === 8)) {
+            // Mobile Number Mode (e.g. 7432957510, 8972511055)
+            detectedType = 'mobile';
+            detectBadge.classList.add('mobile-mode');
+            detectBadgeText.innerHTML = '<i class="fa-solid fa-mobile-screen"></i> 📱 Mobile Number Detected';
+            prefixIcon.innerHTML = '<i class="fa-solid fa-phone"></i>';
+        } else if (isPureDigits && val.length >= 11) {
+            // Application Number Mode (e.g. 303100000064)
+            detectedType = 'app';
+            detectBadge.classList.add('app-mode');
+            detectBadgeText.innerHTML = '<i class="fa-solid fa-hashtag"></i> 📄 Application Number Detected';
+            prefixIcon.innerHTML = '<i class="fa-solid fa-hashtag"></i>';
+        } else {
+            // General Auto-Detect
+            detectedType = 'auto';
+            detectBadgeText.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Detecting Format...';
+            prefixIcon.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i>';
         }
     });
+
+    function resetBadge() {
+        detectedType = 'auto';
+        detectBadge.className = 'detect-badge';
+        detectBadgeText.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Detect Mode Active';
+        prefixIcon.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i>';
+    }
+}
+
+// Form Handlers
+function setupFormHandlers() {
+    const searchForm = document.getElementById('searchForm');
+    const btnClearSearch = document.getElementById('btnClearSearch');
+    const searchInput = document.getElementById('searchInput');
 
     btnClearSearch.addEventListener('click', () => {
         searchInput.value = '';
         btnClearSearch.classList.add('hidden');
         searchInput.focus();
+        searchInput.dispatchEvent(new Event('input'));
     });
 
     searchForm.addEventListener('submit', (e) => {
@@ -250,63 +106,56 @@ function setupFormHandlers() {
     document.getElementById('btnPrintSlip').addEventListener('click', printStatusSlip);
 }
 
-// Perform Search Execution
+// Execute Live Status Query
 async function performSearch(query) {
     showLoading(true);
     hideResults();
 
-    let records = [];
+    try {
+        const url = `${API_ENDPOINT}?query=${encodeURIComponent(query)}`;
+        const response = await fetch(url);
+        const json = await response.json();
 
-    if (!useDemoData && customApiUrl) {
-        // Fetch from custom Google Apps Script Web App
-        try {
-            const apiUrl = `${customApiUrl}?query=${encodeURIComponent(query)}`;
-            const response = await fetch(apiUrl);
-            const json = await response.json();
-            if (json.status === 'success' && json.data && json.data.length > 0) {
-                records = json.data;
-            }
-        } catch (err) {
-            console.warn("API Fetch failed, falling back to local demo dataset", err);
-            records = searchLocalDemoData(query);
+        showLoading(false);
+
+        if (json.status === 'success' && json.data && json.data.length > 0) {
+            // Pick match (exact match preference)
+            const match = findBestMatch(json.data, query);
+            currentRecord = match;
+            renderSearchResult(match);
+        } else {
+            showNotFound(query);
         }
-    } else {
-        // Search in local demo data
-        await new Promise(r => setTimeout(r, 450)); // smooth realistic loading state
-        records = searchLocalDemoData(query);
-    }
 
-    showLoading(false);
-
-    if (records.length > 0) {
-        currentRecord = records[0]; // Display top match
-        renderSearchResult(currentRecord);
-    } else {
+    } catch (err) {
+        console.error("API query error:", err);
+        showLoading(false);
         showNotFound(query);
     }
 }
 
-// Search Logic inside Local Demo Dataset
-function searchLocalDemoData(query) {
+// Helper to select best matching record
+function findBestMatch(records, query) {
+    const cleanQuery = query.toLowerCase().replace(/\D/g, "");
     const qLower = query.toLowerCase().trim();
-    const cleanQuery = qLower.replace(/\D/g, "");
 
-    return DEMO_DATA.filter(item => {
-        const mobile = (item["Mobile"] || "").toLowerCase();
-        const epic = (item["EPIC No."] || "").toLowerCase();
-        const appNo = (item["Application No."] || "").toLowerCase();
-        const cleanMobile = mobile.replace(/\D/g, "");
+    // 1. Try exact Mobile match
+    for (let r of records) {
+        const mob = String(r["Mobile"] || r["Mobile No."] || "").replace(/\D/g, "");
+        if (cleanQuery !== "" && mob === cleanQuery) return r;
+    }
 
-        // Match exact or contains for mobile, EPIC, or application no
-        const matchMobile = (cleanQuery !== "" && cleanMobile.includes(cleanQuery)) || mobile.includes(qLower);
-        const matchEpic = epic.includes(qLower);
-        const matchApp = appNo.includes(qLower);
+    // 2. Try exact EPIC match
+    for (let r of records) {
+        const epic = String(r["EPIC No."] || r["EPIC No"] || "").toLowerCase().trim();
+        if (epic === qLower) return r;
+    }
 
-        return matchMobile || matchEpic || matchApp;
-    });
+    // 3. Fallback to first record in list
+    return records[0];
 }
 
-// Render Result Card
+// Render Search Result Card
 function renderSearchResult(record) {
     const resultSection = document.getElementById('resultSection');
     const notFoundSection = document.getElementById('notFoundSection');
@@ -314,28 +163,24 @@ function renderSearchResult(record) {
     notFoundSection.classList.add('hidden');
     resultSection.classList.remove('hidden');
 
-    // Status Values & Badges
+    // Status Badges & Progress Line
     const status = record["Application Status"] || record["Status"] || "Approved";
     const statusBadge = document.getElementById('statusBadge');
-    const statusBadgeText = document.getElementById('statusBadgeText');
     const statusSummaryText = document.getElementById('statusSummaryText');
 
-    // Step Elements
     const step1 = document.getElementById('step1');
     const step2 = document.getElementById('step2');
     const step3 = document.getElementById('step3');
     const line1 = document.getElementById('line1');
     const line2 = document.getElementById('line2');
 
-    // Reset status classes
     statusBadge.className = 'status-badge';
-
     const sLower = status.toLowerCase();
 
     if (sLower.includes('approved') && !sLower.includes('pending')) {
         statusBadge.classList.add('approved');
         statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span id="statusBadgeText">APPROVED</span>';
-        statusSummaryText.textContent = "Your application has been successfully verified and APPROVED by the authority.";
+        statusSummaryText.textContent = "Your application has been officially verified and APPROVED by the competent authority.";
         
         step1.className = "timeline-step step-done";
         line1.className = "timeline-line line-done";
@@ -384,7 +229,6 @@ function renderSearchResult(record) {
     document.getElementById('valMobileDigits').textContent = getLastNDigits(rawMobile, 4);
     document.getElementById('valEpicDigits').textContent = getLastNDigits(rawEpic, 4);
 
-    // Scroll smoothly to results
     resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
@@ -415,9 +259,10 @@ function resetSearch() {
     const input = document.getElementById('searchInput');
     input.value = '';
     input.focus();
+    input.dispatchEvent(new Event('input'));
 }
 
-// UI Loading state
+// UI Loading State
 function showLoading(isLoading) {
     const btnSearch = document.getElementById('btnSearch');
     const btnText = btnSearch.querySelector('.btn-text');
@@ -439,109 +284,21 @@ function hideResults() {
     document.getElementById('notFoundSection').classList.add('hidden');
 }
 
-// Quick Sample Pills
+// Quick Sample Example Pills
 function setupQuickSamples() {
     const samplePills = document.querySelectorAll('.sample-pill');
     samplePills.forEach(pill => {
         pill.addEventListener('click', () => {
             const val = pill.getAttribute('data-value');
-            const type = pill.getAttribute('data-type');
-
-            if (type === 'mobile') {
-                document.getElementById('tabMobile').click();
-            } else {
-                document.getElementById('tabEpic').click();
-            }
-
             const searchInput = document.getElementById('searchInput');
             searchInput.value = val;
-            document.getElementById('btnClearSearch').classList.remove('hidden');
+            searchInput.dispatchEvent(new Event('input'));
             performSearch(val);
         });
     });
 }
 
-// Modal Setup
-function setupModalHandlers() {
-    // Sheet Code Modal
-    const modalSheetCode = document.getElementById('modalSheetCode');
-    const btnSheetCode = document.getElementById('btnSheetCode');
-    const btnCloseSheetModal = document.getElementById('btnCloseSheetModal');
-    const btnCloseSheetModal2 = document.getElementById('btnCloseSheetModal2');
-    const linkFooterSheetCode = document.getElementById('linkFooterSheetCode');
-
-    const openSheetModal = () => modalSheetCode.classList.remove('hidden');
-    const closeSheetModal = () => modalSheetCode.classList.add('hidden');
-
-    btnSheetCode.addEventListener('click', openSheetModal);
-    linkFooterSheetCode.addEventListener('click', (e) => { e.preventDefault(); openSheetModal(); });
-    btnCloseSheetModal.addEventListener('click', closeSheetModal);
-    btnCloseSheetModal2.addEventListener('click', closeSheetModal);
-
-    // Settings Modal
-    const modalSettings = document.getElementById('modalSettings');
-    const btnSettings = document.getElementById('btnSettings');
-    const btnCloseSettingsModal = document.getElementById('btnCloseSettingsModal');
-    const linkConfigApi = document.getElementById('linkConfigApi');
-    const btnOpenConfigFromModal = document.getElementById('btnOpenConfigFromModal');
-
-    const openSettingsModal = () => {
-        document.getElementById('inputApiUrl').value = customApiUrl;
-        document.getElementById('chkUseDemoData').checked = useDemoData;
-        modalSettings.classList.remove('hidden');
-    };
-    const closeSettingsModal = () => modalSettings.classList.add('hidden');
-
-    btnSettings.addEventListener('click', openSettingsModal);
-    linkConfigApi.addEventListener('click', (e) => { e.preventDefault(); openSettingsModal(); });
-    btnOpenConfigFromModal.addEventListener('click', () => { closeSheetModal(); openSettingsModal(); });
-    btnCloseSettingsModal.addEventListener('click', closeSettingsModal);
-
-    // Copy Code Button
-    document.getElementById('btnCopyCode').addEventListener('click', () => {
-        navigator.clipboard.writeText(GOOGLE_SCRIPT_CODE);
-        const btn = document.getElementById('btnCopyCode');
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
-        setTimeout(() => {
-            btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy Code';
-        }, 2000);
-    });
-
-    // Save Settings
-    document.getElementById('btnSaveSettings').addEventListener('click', () => {
-        customApiUrl = document.getElementById('inputApiUrl').value.trim();
-        useDemoData = document.getElementById('chkUseDemoData').checked;
-
-        localStorage.setItem('beltar_api_url', customApiUrl);
-        localStorage.setItem('beltar_use_demo', useDemoData ? 'true' : 'false');
-
-        updateApiStatusBanner();
-        closeSettingsModal();
-    });
-
-    // Reset Settings
-    document.getElementById('btnResetApiUrl').addEventListener('click', () => {
-        customApiUrl = '';
-        useDemoData = true;
-        document.getElementById('inputApiUrl').value = '';
-        document.getElementById('chkUseDemoData').checked = true;
-        localStorage.removeItem('beltar_api_url');
-        localStorage.setItem('beltar_use_demo', 'true');
-        updateApiStatusBanner();
-        closeSettingsModal();
-    });
-}
-
-function updateApiStatusBanner() {
-    const textEl = document.getElementById('apiStatusText');
-    if (!useDemoData && customApiUrl) {
-        textEl.textContent = "Connected to Live Google Sheet API";
-    } else {
-        textEl.textContent = "Using Built-in Live Demo Dataset";
-    }
-}
-
-// Dark / Light Theme Toggle
+// Theme Toggle
 function setupThemeToggle() {
     const btnTheme = document.getElementById('btnThemeToggle');
     const currentTheme = localStorage.getItem('beltar_theme') || 'dark';
@@ -565,7 +322,7 @@ function setupThemeToggle() {
     });
 }
 
-// Print Status Slip Generator
+// Printable Slip Generator
 function printStatusSlip() {
     if (!currentRecord) return;
 
@@ -578,17 +335,17 @@ function printStatusSlip() {
     document.getElementById('slipAppNo').textContent = "********" + getLastNDigits(record["Application No."], 4);
     document.getElementById('slipMobile').textContent = "******" + getLastNDigits(record["Mobile"], 4);
     document.getElementById('slipEpic').textContent = "******" + getLastNDigits(record["EPIC No."], 4);
-    document.getElementById('slipSlNo').textContent = record["Sl. No."] || "88582";
+    document.getElementById('slipSlNo').textContent = record["Sl. No."] || "Ref #" + Math.floor(10000 + Math.random() * 90000);
     document.getElementById('slipAddress').textContent = record["Address"] || "N/A";
 
     const status = record["Application Status"] || "APPROVED";
     document.getElementById('slipStatusBadgeText').textContent = status.toUpperCase();
 
-    // Generate Verification QR Code URL using QuickChart API
+    // QR Code Generator URL
     const qrData = `BELTAR PORTAL VERIFIED\nName: ${record["Applicant Name"]}\nStatus: ${status}\nRef: ${record["Sl. No."]}`;
     const qrUrl = `https://quickchart.io/qr?text=${encodeURIComponent(qrData)}&size=150`;
     document.getElementById('slipQrCode').src = qrUrl;
 
-    // Trigger Print
+    // Trigger Browser Print
     window.print();
 }

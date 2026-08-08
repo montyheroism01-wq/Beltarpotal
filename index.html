@@ -31,17 +31,11 @@
                 </div>
                 <div class="logo-text">
                     <span class="brand-name">BELTAR <span class="highlight">PORTAL</span></span>
-                    <span class="brand-tagline">GOVT. CITIZEN SERVICE</span>
+                    <span class="brand-tagline">OFFICIAL VERIFICATION SYSTEM</span>
                 </div>
             </a>
             
             <div class="nav-actions">
-                <button id="btnSheetCode" class="btn btn-secondary btn-sm" title="Get Google Sheet Code">
-                    <i class="fa-solid fa-code"></i> <span class="hide-mobile">Google Sheet Code</span>
-                </button>
-                <button id="btnSettings" class="btn btn-ghost btn-icon" title="API Settings">
-                    <i class="fa-solid fa-gear"></i>
-                </button>
                 <button id="btnThemeToggle" class="btn btn-ghost btn-icon" title="Toggle Theme">
                     <i class="fa-solid fa-moon"></i>
                 </button>
@@ -55,37 +49,34 @@
         <!-- Hero Section -->
         <section class="hero-section">
             <div class="hero-badge">
-                <span class="pulse-dot"></span> Online Verification Services
+                <span class="pulse-dot"></span> Citizen Verification Portal
             </div>
-            <h1 class="hero-title">BELTAR APPLICATION STATUS</h1>
-            <p class="hero-subtitle">Instantly verify your application status securely using your Mobile Number or EPIC Voter ID.</p>
+            <h1 class="hero-title">CHECK APPLICATION STATUS</h1>
+            <p class="hero-subtitle">Enter your Mobile Number or EPIC Voter ID No. below to verify your application status instantly.</p>
         </section>
 
         <!-- Search Card Component -->
         <section class="search-section">
             <div class="search-card">
                 
-                <!-- Search Tabs -->
-                <div class="search-tabs" role="tablist">
-                    <button class="tab-btn active" id="tabMobile" data-type="mobile" role="tab" aria-selected="true">
-                        <i class="fa-solid fa-mobile-screen-button"></i> Mobile Number
-                    </button>
-                    <button class="tab-btn" id="tabEpic" data-type="epic" role="tab" aria-selected="false">
-                        <i class="fa-solid fa-id-card"></i> EPIC No. (Voter ID)
-                    </button>
+                <!-- Auto-Detection Indicator Header -->
+                <div class="detection-header" id="detectionHeader">
+                    <span class="detect-badge" id="detectBadge">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> <span id="detectBadgeText">Auto-Detect Mode Active</span>
+                    </span>
                 </div>
 
-                <!-- Search Input Form -->
+                <!-- Unified Search Input Form -->
                 <form id="searchForm" class="search-form">
                     <div class="input-group">
                         <div class="input-icon" id="searchPrefixIcon">
-                            <i class="fa-solid fa-phone"></i>
+                            <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
                         <input 
                             type="text" 
                             id="searchInput" 
                             class="search-input" 
-                            placeholder="Enter 10-digit Mobile Number (e.g., 743295710)" 
+                            placeholder="Enter Mobile No. (e.g. 7432957510) or EPIC No. (e.g. HCL3045382)" 
                             required 
                             autocomplete="off"
                         >
@@ -99,29 +90,23 @@
                     </div>
                 </form>
 
-                <!-- Quick Test Samples -->
+                <!-- Search Examples Tag Row -->
                 <div class="quick-samples">
-                    <span class="sample-label"><i class="fa-solid fa-bolt"></i> Quick Demo Samples:</span>
+                    <span class="sample-label"><i class="fa-solid fa-circle-info"></i> Search Examples:</span>
                     <div class="sample-tags">
-                        <button type="button" class="sample-pill" data-value="743295710" data-type="mobile">
-                            📱 743295710
+                        <button type="button" class="sample-pill" data-value="7432957510">
+                            📱 7432957510 (Mobile)
                         </button>
-                        <button type="button" class="sample-pill" data-value="8001225224" data-type="mobile">
-                            📱 8001225224
+                        <button type="button" class="sample-pill" data-value="8972511055">
+                            📱 8972511055 (Mobile)
                         </button>
-                        <button type="button" class="sample-pill" data-value="HCL3045382" data-type="epic">
-                            🪪 HCL3045382
+                        <button type="button" class="sample-pill" data-value="HCL3045382">
+                            🪪 HCL3045382 (EPIC No.)
                         </button>
-                        <button type="button" class="sample-pill" data-value="NRC1383892" data-type="epic">
-                            🪪 NRC1383892
+                        <button type="button" class="sample-pill" data-value="NRC1383892">
+                            🪪 NRC1383892 (EPIC No.)
                         </button>
                     </div>
-                </div>
-
-                <!-- API Status Banner -->
-                <div id="apiStatusBanner" class="api-status-banner">
-                    <i class="fa-solid fa-database"></i> <span id="apiStatusText">Using Built-in Live Demo Dataset</span> 
-                    <a href="#" id="linkConfigApi" class="banner-link">Connect Google Sheet API</a>
                 </div>
 
             </div>
@@ -170,7 +155,7 @@
                     <div class="details-header">
                         <h2><i class="fa-solid fa-user-shield"></i> Applicant Information Details</h2>
                         <div class="privacy-notice">
-                            <i class="fa-solid fa-lock"></i> Privacy Protection: Sensitive identifiers show <strong>last 4 digits</strong>
+                            <i class="fa-solid fa-lock"></i> Privacy Protected: Showing <strong>last 4 digits</strong>
                         </div>
                     </div>
 
@@ -232,7 +217,7 @@
                             <div class="detail-icon"><i class="fa-solid fa-calendar-check"></i></div>
                             <div class="detail-content">
                                 <span class="detail-label">Verification Timestamp</span>
-                                <span class="detail-value" id="valVerifyDate">Today, Official Record</span>
+                                <span class="detail-value" id="valVerifyDate">Official Record</span>
                             </div>
                         </div>
 
@@ -255,7 +240,7 @@
                     <button type="button" id="btnPrintSlip" class="btn btn-emerald btn-lg">
                         <i class="fa-solid fa-print"></i> Print Official Status Slip
                     </button>
-                    <button type="button" id="btnNewSearch" class="btn btn-outline btn-lg">
+                    <button type="button" id="btnNewSearch" class="btn btn-outline btn-lg" onclick="resetSearch()">
                         <i class="fa-solid fa-rotate-left"></i> Check Another Record
                     </button>
                 </div>
@@ -275,9 +260,9 @@
                 <div class="tips-box">
                     <strong><i class="fa-solid fa-lightbulb"></i> Verification Tips:</strong>
                     <ul>
-                        <li>Make sure your 10-digit mobile number or EPIC Voter ID is correct.</li>
-                        <li>You can also search by typing the last 4 digits of your registered mobile.</li>
-                        <li>Ensure data has been entered correctly into your connected Google Sheet.</li>
+                        <li>Ensure your 10-digit mobile number or EPIC Voter ID is typed correctly.</li>
+                        <li>You can also search using the last 4 digits of your registered mobile.</li>
+                        <li>Double-check your Application Number if available.</li>
                     </ul>
                 </div>
                 <button type="button" class="btn btn-primary" onclick="resetSearch()">
@@ -288,92 +273,14 @@
 
     </main>
 
-    <!-- Google Sheet Code Modal -->
-    <div id="modalSheetCode" class="modal-overlay hidden">
-        <div class="modal-card modal-lg">
-            <div class="modal-header">
-                <div class="modal-title">
-                    <i class="fa-solid fa-file-code"></i> Google Sheet Backend Code
-                </div>
-                <button class="modal-close" id="btnCloseSheetModal"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="modal-body">
-                <p class="modal-desc">Copy this Google Apps Script code and paste it into your Google Sheet under <strong>Extensions &gt; Apps Script</strong> to enable real-time status checking from your sheet data.</p>
-                
-                <div class="steps-list">
-                    <div class="step-item">
-                        <span class="step-num">1</span>
-                        <span>Open your Google Sheet with columns: <strong>Sl. No., Application No., Applicant Name, Mobile, EPIC No., Application Status, Address</strong>.</span>
-                    </div>
-                    <div class="step-item">
-                        <span class="step-num">2</span>
-                        <span>Click <strong>Extensions &gt; Apps Script</strong>. Replace code in <code>Code.gs</code> with the code below.</span>
-                    </div>
-                    <div class="step-item">
-                        <span class="step-num">3</span>
-                        <span>Click <strong>Deploy &gt; New deployment &gt; Select Web app</strong>. Set <strong>Who has access to "Anyone"</strong>. Copy Web App URL.</span>
-                    </div>
-                </div>
-
-                <div class="code-box-wrapper">
-                    <div class="code-box-header">
-                        <span><i class="fa-brands fa-js"></i> google-apps-script.js (Code.gs)</span>
-                        <button id="btnCopyCode" class="btn btn-sm btn-ghost-white">
-                            <i class="fa-regular fa-copy"></i> Copy Code
-                        </button>
-                    </div>
-                    <pre class="code-box"><code id="codeText"></code></pre>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="btnCloseSheetModal2">Close</button>
-                <button class="btn btn-primary" id="btnOpenConfigFromModal">Enter Web App URL</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- API Settings Modal -->
-    <div id="modalSettings" class="modal-overlay hidden">
-        <div class="modal-card">
-            <div class="modal-header">
-                <div class="modal-title">
-                    <i class="fa-solid fa-sliders"></i> Google Sheet API Settings
-                </div>
-                <button class="modal-close" id="btnCloseSettingsModal"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="inputApiUrl" class="form-label">Google Apps Script Web App URL</label>
-                    <input 
-                        type="url" 
-                        id="inputApiUrl" 
-                        class="form-control" 
-                        placeholder="https://script.google.com/macros/s/.../exec"
-                    >
-                    <small class="form-help">Enter your published Google Sheet Web App URL here. Leave empty to use the built-in demo dataset.</small>
-                </div>
-
-                <div class="mode-switch-box">
-                    <label class="switch-label">
-                        <input type="checkbox" id="chkUseDemoData" checked>
-                        <span class="slider"></span>
-                        <span class="switch-text">Use Sample Local Demo Data</span>
-                    </label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="btnResetApiUrl">Reset to Demo</button>
-                <button class="btn btn-primary" id="btnSaveSettings">Save Connection</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Printable Slip Modal Container (For Print Preview) -->
     <div id="printSlipModal" class="print-slip-container hidden">
         <div class="slip-paper">
             <div class="slip-header">
-                <div class="slip-gov-seal"><i class="fa-solid fa-shield-halved"></i></div>
-                <h2>BELTAR PORTAL - CITIZEN SERVICE PORTAL</h2>
+                <div class="slip-gov-seal">
+                    <img src="logo.png" alt="Seal" width="60" height="60">
+                </div>
+                <h2>BELTAR PORTAL</h2>
                 <p>Official Application Status Verification Slip</p>
                 <div class="slip-date" id="slipDate">--</div>
             </div>
@@ -416,7 +323,7 @@
                 </div>
                 <div class="stamp-box">
                     <div class="official-seal">BELTAR PORTAL<br>VERIFIED SLIP</div>
-                    <span>Authorized System Signature</span>
+                    <span>System Authorized Signature</span>
                 </div>
             </div>
         </div>
@@ -427,11 +334,7 @@
         <div class="footer-container">
             <div class="footer-brand">
                 <span>BELTAR PORTAL &copy; 2026</span>
-                <p>Designed for fast, secure citizen application status verification.</p>
-            </div>
-            <div class="footer-links">
-                <a href="#" id="linkFooterSheetCode"><i class="fa-solid fa-code"></i> Get Google Sheet Code</a>
-                <a href="#" id="linkFooterGithub"><i class="fa-brands fa-github"></i> GitHub Repository</a>
+                <p>Official Citizen Application Status Verification System</p>
             </div>
         </div>
     </footer>
