@@ -12,6 +12,11 @@ let currentRecord = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     initApp();
+    
+    // Prevent pinch-to-zoom gesture on touch devices
+    document.addEventListener('gesturestart', (e) => {
+        e.preventDefault();
+    });
 });
 
 function initApp() {

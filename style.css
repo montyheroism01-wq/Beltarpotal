@@ -102,11 +102,36 @@
     --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.25);
 }
 
-/* Reset & Global */
+/* Hide scrollbars globally across all browsers */
+::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+html, body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    touch-action: manipulation;
+    user-select: none;
+}
+
+input, textarea, p, span, h1, h2, h3, h4, td, th, a, button {
+    user-select: text;
+}
+
+/* Reset & Remove Blue Outlines / Tap Highlights */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
+}
+
+*:focus, *:focus-visible, input:focus, button:focus, a:focus {
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 body {
@@ -118,6 +143,7 @@ body {
     flex-direction: column;
     line-height: 1.6;
     transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
 }
 
 /* Font Size Modifiers */
@@ -155,8 +181,8 @@ body.font-lg { font-size: 18px; }
 }
 
 .govt-mini-seal {
-    width: 22px;
-    height: 22px;
+    width: 26px;
+    height: 26px;
     object-fit: contain;
 }
 
@@ -241,14 +267,18 @@ body.font-lg { font-size: 18px; }
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    background: transparent;
+    box-shadow: none;
+    overflow: hidden;
+    flex-shrink: 0;
 }
 
 .brand-logo-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 50%;
+    display: block;
 }
 
 .logo-text {
