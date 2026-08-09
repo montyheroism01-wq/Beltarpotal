@@ -1,85 +1,23 @@
 /**
  * ==============================================================================
- * BELTAR PORTAL - OFFICIAL APPLICATION STATUS ENGINE
+ * BELTAR PORTAL - GOVERNMENT OF WEST BENGAL ONLINE SERVICE ENGINE
  * ==============================================================================
  */
 
-// Production API Endpoint (Hardcoded)
+// Live Production API Endpoint
 const API_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwZuCg_r1bQpvCihEjtnJzHiQSuVfi5iIW_5kMeJLVl3UITEl0nEpxnmWHc2-fi68PUrA/exec';
 
-// State
+// Application State
 let currentRecord = null;
-let detectedType = 'auto'; // 'mobile', 'epic', 'app', or 'auto'
 
 document.addEventListener('DOMContentLoaded', () => {
     initApp();
 });
 
 function initApp() {
-    setupAutoDetector();
     setupFormHandlers();
     setupThemeToggle();
-    setupQuickSamples();
-}
-
-// Real-time Auto Detection (Mobile Number vs EPIC Voter ID vs Application No)
-function setupAutoDetector() {
-    const searchInput = document.getElementById('searchInput');
-    const detectBadge = document.getElementById('detectBadge');
-    const detectBadgeText = document.getElementById('detectBadgeText');
-    const prefixIcon = document.getElementById('searchPrefixIcon');
-    const btnClearSearch = document.getElementById('btnClearSearch');
-
-    searchInput.addEventListener('input', () => {
-        const val = searchInput.value.trim();
-
-        if (val === '') {
-            btnClearSearch.classList.add('hidden');
-            resetBadge();
-            return;
-        }
-
-        btnClearSearch.classList.remove('hidden');
-
-        // Check if value is pure numbers or contains letters/slashes
-        const isPureDigits = /^\d+$/.test(val);
-        const hasLetters = /[a-zA-Z]/.test(val);
-        const hasSlash = val.includes('/');
-
-        detectBadge.className = 'detect-badge';
-
-        if (hasLetters || hasSlash || (val.length <= 12 && !isPureDigits)) {
-            // EPIC Voter ID Mode (e.g. HCL3045382, WB/13/085/249034)
-            detectedType = 'epic';
-            detectBadge.classList.add('epic-mode');
-            detectBadgeText.innerHTML = '<i class="fa-solid fa-id-card"></i> 🪪 EPIC Voter ID Detected';
-            prefixIcon.innerHTML = '<i class="fa-solid fa-id-card"></i>';
-        } else if (isPureDigits && (val.length === 10 || val.length === 9 || val.length === 8)) {
-            // Mobile Number Mode (e.g. 7432957510, 8972511055)
-            detectedType = 'mobile';
-            detectBadge.classList.add('mobile-mode');
-            detectBadgeText.innerHTML = '<i class="fa-solid fa-mobile-screen"></i> 📱 Mobile Number Detected';
-            prefixIcon.innerHTML = '<i class="fa-solid fa-phone"></i>';
-        } else if (isPureDigits && val.length >= 11) {
-            // Application Number Mode (e.g. 303100000064)
-            detectedType = 'app';
-            detectBadge.classList.add('app-mode');
-            detectBadgeText.innerHTML = '<i class="fa-solid fa-hashtag"></i> 📄 Application Number Detected';
-            prefixIcon.innerHTML = '<i class="fa-solid fa-hashtag"></i>';
-        } else {
-            // General Auto-Detect
-            detectedType = 'auto';
-            detectBadgeText.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Detecting Format...';
-            prefixIcon.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i>';
-        }
-    });
-
-    function resetBadge() {
-        detectedType = 'auto';
-        detectBadge.className = 'detect-badge';
-        detectBadgeText.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Detect Mode Active';
-        prefixIcon.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i>';
-    }
+    setupFontSizeSizer();
 }
 
 // Form Handlers
@@ -88,11 +26,18 @@ function setupFormHandlers() {
     const btnClearSearch = document.getElementById('btnClearSearch');
     const searchInput = document.getElementById('searchInput');
 
+    searchInput.addEventListener('input', () => {
+        if (searchInput.value.trim() !== '') {
+            btnClearSearch.classList.remove('hidden');
+        } else {
+            btnClearSearch.classList.add('hidden');
+        }
+    });
+
     btnClearSearch.addEventListener('click', () => {
         searchInput.value = '';
         btnClearSearch.classList.add('hidden');
         searchInput.focus();
-        searchInput.dispatchEvent(new Event('input'));
     });
 
     searchForm.addEventListener('submit', (e) => {
@@ -119,7 +64,6 @@ async function performSearch(query) {
         showLoading(false);
 
         if (json.status === 'success' && json.data && json.data.length > 0) {
-            // Pick match (exact match preference)
             const match = findBestMatch(json.data, query);
             currentRecord = match;
             renderSearchResult(match);
@@ -128,34 +72,31 @@ async function performSearch(query) {
         }
 
     } catch (err) {
-        console.error("API query error:", err);
+        console.error("API Error:", err);
         showLoading(false);
         showNotFound(query);
     }
 }
 
-// Helper to select best matching record
+// Helper to select best match
 function findBestMatch(records, query) {
     const cleanQuery = query.toLowerCase().replace(/\D/g, "");
     const qLower = query.toLowerCase().trim();
 
-    // 1. Try exact Mobile match
     for (let r of records) {
         const mob = String(r["Mobile"] || r["Mobile No."] || "").replace(/\D/g, "");
         if (cleanQuery !== "" && mob === cleanQuery) return r;
     }
 
-    // 2. Try exact EPIC match
     for (let r of records) {
         const epic = String(r["EPIC No."] || r["EPIC No"] || "").toLowerCase().trim();
         if (epic === qLower) return r;
     }
 
-    // 3. Fallback to first record in list
     return records[0];
 }
 
-// Render Search Result Card
+// Render Result Card in Bengali
 function renderSearchResult(record) {
     const resultSection = document.getElementById('resultSection');
     const notFoundSection = document.getElementById('notFoundSection');
@@ -163,7 +104,6 @@ function renderSearchResult(record) {
     notFoundSection.classList.add('hidden');
     resultSection.classList.remove('hidden');
 
-    // Status Badges & Progress Line
     const status = record["Application Status"] || record["Status"] || "Approved";
     const statusBadge = document.getElementById('statusBadge');
     const statusSummaryText = document.getElementById('statusSummaryText');
@@ -179,8 +119,8 @@ function renderSearchResult(record) {
 
     if (sLower.includes('approved') && !sLower.includes('pending')) {
         statusBadge.classList.add('approved');
-        statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span id="statusBadgeText">APPROVED</span>';
-        statusSummaryText.textContent = "Your application has been officially verified and APPROVED by the competent authority.";
+        statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span id="statusBadgeText">অনুমোদিত (APPROVED)</span>';
+        statusSummaryText.textContent = "আপনার আবেদনপত্রটি সফলভাবে যাচাই করা হয়েছে এবং সংশ্লিষ্ট কর্তৃপক্ষ দ্বারা অনুমোদিত হয়েছে।";
         
         step1.className = "timeline-step step-done";
         line1.className = "timeline-line line-done";
@@ -190,8 +130,8 @@ function renderSearchResult(record) {
         step3.querySelector('.step-icon').innerHTML = '<i class="fa-solid fa-award"></i>';
     } else if (sLower.includes('pending') || sLower.includes('verified')) {
         statusBadge.classList.add('pending');
-        statusBadge.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i> <span id="statusBadgeText">VERIFIED - APPROVAL PENDING</span>';
-        statusSummaryText.textContent = "Your documents are field verified and currently pending final approval from higher authorities.";
+        statusBadge.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i> <span id="statusBadgeText">যাচাইকৃত - অনুমোদন অপেক্ষমান</span>';
+        statusSummaryText.textContent = "আপনার নথিগুলি ক্ষেত্রপর্যায়ে সফলভাবে যাচাই করা হয়েছে এবং চূড়ান্ত অনুমোদনের জন্য প্রক্রিয়াধীন রয়েছে।";
         
         step1.className = "timeline-step step-done";
         line1.className = "timeline-line line-done";
@@ -201,8 +141,8 @@ function renderSearchResult(record) {
         step3.querySelector('.step-icon').innerHTML = '<i class="fa-solid fa-hourglass-half"></i>';
     } else if (sLower.includes('process') || sLower.includes('under')) {
         statusBadge.classList.add('process');
-        statusBadge.innerHTML = '<i class="fa-solid fa-gear fa-spin"></i> <span id="statusBadgeText">UNDER PROCESS</span>';
-        statusSummaryText.textContent = "Your application is under active processing and field verification stage.";
+        statusBadge.innerHTML = '<i class="fa-solid fa-gear fa-spin"></i> <span id="statusBadgeText">প্রক্রিয়াধীন (UNDER PROCESS)</span>';
+        statusSummaryText.textContent = "আপনার আবেদনটি ক্ষেত্র যাচাইকরণ এবং সক্রিয় প্রক্রিয়াকরণ পর্যায়ে রয়েছে।";
         
         step1.className = "timeline-step step-done";
         line1.className = "timeline-line line-done";
@@ -211,11 +151,11 @@ function renderSearchResult(record) {
         step3.className = "timeline-step";
     } else {
         statusBadge.classList.add('rejected');
-        statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> <span id="statusBadgeText">REJECTED</span>';
-        statusSummaryText.textContent = "Your application requires resubmission or correction. Please contact your local center.";
+        statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> <span id="statusBadgeText">প্রত্যাখ্যাত (REJECTED)</span>';
+        statusSummaryText.textContent = "আপনার আবেদনে সংশোধনের প্রয়োজন রয়েছে। অনুগ্রহ করে আপনার নিকটস্থ আঞ্চলিক কার্যালয়ে যোগাযোগ করুন।";
     }
 
-    // Applicant Information Details
+    // Applicant Information
     document.getElementById('valApplicantName').textContent = record["Applicant Name"] || record["Name"] || "N/A";
     document.getElementById('valSlNo').textContent = record["Sl. No."] || record["Sl No"] || "Ref #" + Math.floor(10000 + Math.random() * 90000);
     document.getElementById('valAddress').textContent = record["Address"] || record["Full Address"] || "N/A";
@@ -232,7 +172,6 @@ function renderSearchResult(record) {
     resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Utility to extract last N digits for privacy masking
 function getLastNDigits(str, n) {
     if (!str) return '----';
     const s = String(str).trim();
@@ -240,7 +179,6 @@ function getLastNDigits(str, n) {
     return s.slice(-n);
 }
 
-// Show Not Found State
 function showNotFound(query) {
     const resultSection = document.getElementById('resultSection');
     const notFoundSection = document.getElementById('notFoundSection');
@@ -252,17 +190,14 @@ function showNotFound(query) {
     notFoundSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Reset Search View
 function resetSearch() {
     document.getElementById('resultSection').classList.add('hidden');
     document.getElementById('notFoundSection').classList.add('hidden');
     const input = document.getElementById('searchInput');
     input.value = '';
     input.focus();
-    input.dispatchEvent(new Event('input'));
 }
 
-// UI Loading State
 function showLoading(isLoading) {
     const btnSearch = document.getElementById('btnSearch');
     const btnText = btnSearch.querySelector('.btn-text');
@@ -284,42 +219,62 @@ function hideResults() {
     document.getElementById('notFoundSection').classList.add('hidden');
 }
 
-// Quick Sample Example Pills
-function setupQuickSamples() {
-    const samplePills = document.querySelectorAll('.sample-pill');
-    samplePills.forEach(pill => {
-        pill.addEventListener('click', () => {
-            const val = pill.getAttribute('data-value');
-            const searchInput = document.getElementById('searchInput');
-            searchInput.value = val;
-            searchInput.dispatchEvent(new Event('input'));
-            performSearch(val);
-        });
-    });
-}
-
-// Theme Toggle
+// 100% Guaranteed Light/Dark Mode Switcher
 function setupThemeToggle() {
     const btnTheme = document.getElementById('btnThemeToggle');
-    const currentTheme = localStorage.getItem('beltar_theme') || 'dark';
+    const textEl = document.getElementById('themeToggleText');
+    const savedTheme = localStorage.getItem('beltar_theme') || 'light';
 
-    if (currentTheme === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-        btnTheme.innerHTML = '<i class="fa-solid fa-sun"></i>';
-    }
+    applyTheme(savedTheme);
 
     btnTheme.addEventListener('click', () => {
-        let theme = document.documentElement.getAttribute('data-theme');
-        if (theme === 'light') {
-            document.documentElement.removeAttribute('data-theme');
-            btnTheme.innerHTML = '<i class="fa-solid fa-moon"></i>';
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        applyTheme(newTheme);
+    });
+
+    function applyTheme(theme) {
+        if (theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.body.className = 'dark-mode';
+            btnTheme.innerHTML = '<i class="fa-solid fa-sun"></i> <span class="hide-mobile" id="themeToggleText">লাইট মোড</span>';
             localStorage.setItem('beltar_theme', 'dark');
         } else {
             document.documentElement.setAttribute('data-theme', 'light');
-            btnTheme.innerHTML = '<i class="fa-solid fa-sun"></i>';
+            document.body.className = 'light-mode';
+            btnTheme.innerHTML = '<i class="fa-solid fa-moon"></i> <span class="hide-mobile" id="themeToggleText">ডার্ক মোড</span>';
             localStorage.setItem('beltar_theme', 'light');
         }
+    }
+}
+
+// Accessibility Text Size Adjuster
+function setupFontSizeSizer() {
+    const btnDec = document.getElementById('btnDecreaseFont');
+    const btnNorm = document.getElementById('btnNormalFont');
+    const btnInc = document.getElementById('btnIncreaseFont');
+
+    btnDec.addEventListener('click', () => {
+        document.body.classList.remove('font-lg');
+        document.body.classList.add('font-sm');
+        setActiveBtn(btnDec);
     });
+
+    btnNorm.addEventListener('click', () => {
+        document.body.classList.remove('font-sm', 'font-lg');
+        setActiveBtn(btnNorm);
+    });
+
+    btnInc.addEventListener('click', () => {
+        document.body.classList.remove('font-sm');
+        document.body.classList.add('font-lg');
+        setActiveBtn(btnInc);
+    });
+
+    function setActiveBtn(activeBtn) {
+        [btnDec, btnNorm, btnInc].forEach(b => b.classList.remove('active'));
+        activeBtn.classList.add('active');
+    }
 }
 
 // Printable Slip Generator
@@ -328,9 +283,9 @@ function printStatusSlip() {
 
     const record = currentRecord;
     const now = new Date();
-    const formattedDate = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const formattedDate = now.toLocaleDateString('bn-IN', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    document.getElementById('slipDate').textContent = "Date: " + formattedDate;
+    document.getElementById('slipDate').textContent = "তারিখ: " + formattedDate;
     document.getElementById('slipName').textContent = record["Applicant Name"] || "N/A";
     document.getElementById('slipAppNo').textContent = "********" + getLastNDigits(record["Application No."], 4);
     document.getElementById('slipMobile').textContent = "******" + getLastNDigits(record["Mobile"], 4);
@@ -339,13 +294,11 @@ function printStatusSlip() {
     document.getElementById('slipAddress').textContent = record["Address"] || "N/A";
 
     const status = record["Application Status"] || "APPROVED";
-    document.getElementById('slipStatusBadgeText').textContent = status.toUpperCase();
+    document.getElementById('slipStatusBadgeText').textContent = status.toUpperCase() === "APPROVED" ? "অনুমোদিত (APPROVED)" : status;
 
-    // QR Code Generator URL
-    const qrData = `BELTAR PORTAL VERIFIED\nName: ${record["Applicant Name"]}\nStatus: ${status}\nRef: ${record["Sl. No."]}`;
+    const qrData = `BELTAR PORTAL VERIFIED\nGovt of West Bengal\nName: ${record["Applicant Name"]}\nStatus: ${status}\nRef: ${record["Sl. No."]}`;
     const qrUrl = `https://quickchart.io/qr?text=${encodeURIComponent(qrData)}&size=150`;
     document.getElementById('slipQrCode').src = qrUrl;
 
-    // Trigger Browser Print
     window.print();
 }

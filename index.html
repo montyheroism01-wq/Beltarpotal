@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="BELTAR PORTAL - Official Online Application Status Verification System. Check status using Mobile Number or EPIC Voter ID.">
-    <title>BELTAR PORTAL | Application Status Verification</title>
+    <meta name="description" content="বেলতার পোর্টাল - পশ্চিমবঙ্গ সরকার। অনলাইন আবেদন স্থিতি এবং নাগরিক পরিষেবা যাচাইকরণ পোর্টাল।">
+    <title>বেলতার পোর্টাল | BELTAR PORTAL - পশ্চিমবঙ্গ সরকার</title>
     
     <!-- Favicon / Tab Logo -->
     <link rel="icon" type="image/png" href="logo.png">
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Hind Siliguri (Bengali), Outfit & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,53 +20,63 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="light-mode">
+
+    <!-- Official Top Government Tricolor Bar -->
+    <div class="govt-top-bar">
+        <div class="govt-bar-container">
+            <div class="govt-identity">
+                <img src="logo.png" alt="Govt Emblem" class="govt-mini-seal">
+                <span>পশ্চিমবঙ্গ সরকার • GOVERNMENT OF WEST BENGAL</span>
+            </div>
+            <div class="govt-accessibility">
+                <span class="font-sizer hide-mobile">
+                    <button type="button" class="btn-text-size" id="btnDecreaseFont" title="ছোট ফন্ট">A-</button>
+                    <button type="button" class="btn-text-size active" id="btnNormalFont" title="স্বাভাবিক ফন্ট">A</button>
+                    <button type="button" class="btn-text-size" id="btnIncreaseFont" title="বড় ফন্ট">A+</button>
+                </span>
+                <button id="btnThemeToggle" class="btn-theme-toggle" title="ডার্ক/লাইট থিম পরিবর্তন করুন">
+                    <i class="fa-solid fa-moon"></i> <span class="hide-mobile" id="themeToggleText">ডার্ক মোড</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Header / Navbar -->
     <header class="navbar">
         <div class="nav-container">
             <a href="#" class="brand-logo">
                 <div class="logo-icon">
-                    <img src="logo.png" alt="BELTAR PORTAL Logo" class="brand-logo-img">
+                    <img src="logo.png" alt="BISWA BANGLA EMBLEM" class="brand-logo-img">
                 </div>
                 <div class="logo-text">
-                    <span class="brand-name">BELTAR <span class="highlight">PORTAL</span></span>
-                    <span class="brand-tagline">OFFICIAL VERIFICATION SYSTEM</span>
+                    <span class="brand-name">বেলতার পোর্টাল <span class="highlight">BELTAR</span></span>
+                    <span class="brand-tagline">নাগরিক সেবা ও তথ্য যাচাইকরণ পোর্টাল</span>
                 </div>
             </a>
-            
-            <div class="nav-actions">
-                <button id="btnThemeToggle" class="btn btn-ghost btn-icon" title="Toggle Theme">
-                    <i class="fa-solid fa-moon"></i>
-                </button>
+            <div class="header-seal-badge hide-mobile">
+                <i class="fa-solid fa-certificate"></i> অফিসিয়াল পোর্টাল
             </div>
         </div>
     </header>
 
-    <!-- Main Container -->
+    <!-- Main Content Container -->
     <main class="main-content">
         
         <!-- Hero Section -->
         <section class="hero-section">
             <div class="hero-badge">
-                <span class="pulse-dot"></span> Citizen Verification Portal
+                <span class="pulse-dot"></span> নাগরিক পরিষেবা ও স্থিতি যাচাইকরণ পোর্টাল
             </div>
-            <h1 class="hero-title">CHECK APPLICATION STATUS</h1>
-            <p class="hero-subtitle">Enter your Mobile Number or EPIC Voter ID No. below to verify your application status instantly.</p>
+            <h1 class="hero-title">আবেদন স্থিতি যাচাইকরণ</h1>
+            <p class="hero-subtitle">আপনার ১০-সংখ্যার নিবন্ধিত মোবাইল নম্বর অথবা ভোটার আইডি (EPIC) নম্বরটি নিচে লিখুন এবং আবেদনের বর্তমান স্থিতি দেখুন।</p>
         </section>
 
         <!-- Search Card Component -->
         <section class="search-section">
             <div class="search-card">
                 
-                <!-- Auto-Detection Indicator Header -->
-                <div class="detection-header" id="detectionHeader">
-                    <span class="detect-badge" id="detectBadge">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> <span id="detectBadgeText">Auto-Detect Mode Active</span>
-                    </span>
-                </div>
-
-                <!-- Unified Search Input Form -->
+                <!-- Unified Clean Search Input Form -->
                 <form id="searchForm" class="search-form">
                     <div class="input-group">
                         <div class="input-icon" id="searchPrefixIcon">
@@ -76,38 +86,19 @@
                             type="text" 
                             id="searchInput" 
                             class="search-input" 
-                            placeholder="Enter Mobile No. (e.g. 7432957510) or EPIC No. (e.g. HCL3045382)" 
+                            placeholder="মোবাইল নম্বর (যেমন: 7432957510) বা EPIC নম্বর (যেমন: HCL3045382) লিখুন..." 
                             required 
                             autocomplete="off"
                         >
-                        <button type="button" id="btnClearSearch" class="btn-clear hidden" title="Clear input">
+                        <button type="button" id="btnClearSearch" class="btn-clear hidden" title="মুছে ফেলুন">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                         <button type="submit" id="btnSearch" class="btn btn-primary btn-search">
-                            <span class="btn-text"><i class="fa-solid fa-magnifying-glass"></i> Check Status</span>
-                            <span class="btn-spinner hidden"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                            <span class="btn-text"><i class="fa-solid fa-magnifying-glass"></i> স্থিতি অনুসন্ধান করুন</span>
+                            <span class="btn-spinner hidden"><i class="fa-solid fa-circle-notch fa-spin"></i> অনুসন্ধান হচ্ছে...</span>
                         </button>
                     </div>
                 </form>
-
-                <!-- Search Examples Tag Row -->
-                <div class="quick-samples">
-                    <span class="sample-label"><i class="fa-solid fa-circle-info"></i> Search Examples:</span>
-                    <div class="sample-tags">
-                        <button type="button" class="sample-pill" data-value="7432957510">
-                            📱 7432957510 (Mobile)
-                        </button>
-                        <button type="button" class="sample-pill" data-value="8972511055">
-                            📱 8972511055 (Mobile)
-                        </button>
-                        <button type="button" class="sample-pill" data-value="HCL3045382">
-                            🪪 HCL3045382 (EPIC No.)
-                        </button>
-                        <button type="button" class="sample-pill" data-value="NRC1383892">
-                            🪪 NRC1383892 (EPIC No.)
-                        </button>
-                    </div>
-                </div>
 
             </div>
         </section>
@@ -121,41 +112,41 @@
                 <!-- Main Status Highlight Banner -->
                 <div class="status-highlight-box" id="statusHighlightBox">
                     <div class="status-header">
-                        <span class="status-label-text">CURRENT APPLICATION STATUS</span>
+                        <span class="status-label-text">আবেদনের বর্তমান স্থিতি (CURRENT APPLICATION STATUS)</span>
                         <div class="status-badge" id="statusBadge">
-                            <i class="fa-solid fa-circle-check"></i> <span id="statusBadgeText">APPROVED</span>
+                            <i class="fa-solid fa-circle-check"></i> <span id="statusBadgeText">অনুমোদিত (APPROVED)</span>
                         </div>
                     </div>
                     
                     <div class="status-summary" id="statusSummaryText">
-                        Your application has been officially verified and approved by the competent authority.
+                        আপনার আবেদনপত্রটি সফলভাবে যাচাই করা হয়েছে এবং সংশ্লিষ্ট দপ্তর দ্বারা অনুমোদিত হয়েছে।
                     </div>
 
-                    <!-- Progress Step Bar -->
+                    <!-- Timeline Steps -->
                     <div class="timeline-container">
                         <div class="timeline-step step-done" id="step1">
                             <div class="step-icon"><i class="fa-solid fa-file-export"></i></div>
-                            <div class="step-title">Submitted</div>
+                            <div class="step-title">জমা দেওয়া হয়েছে</div>
                         </div>
                         <div class="timeline-line line-done" id="line1"></div>
                         <div class="timeline-step step-done" id="step2">
                             <div class="step-icon"><i class="fa-solid fa-user-check"></i></div>
-                            <div class="step-title">Field Verified</div>
+                            <div class="step-title">ক্ষেত্র যাচাইকৃত</div>
                         </div>
                         <div class="timeline-line line-done" id="line2"></div>
                         <div class="timeline-step" id="step3">
                             <div class="step-icon"><i class="fa-solid fa-award"></i></div>
-                            <div class="step-title" id="step3Title">Approval</div>
+                            <div class="step-title" id="step3Title">অনুমোদন সম্পন্ন</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Important Applicant Details Grid -->
+                <!-- Applicant Information Details -->
                 <div class="details-section">
                     <div class="details-header">
-                        <h2><i class="fa-solid fa-user-shield"></i> Applicant Information Details</h2>
+                        <h2><i class="fa-solid fa-id-card-clip"></i> আবেদনকারীর তথ্য বিবরণী</h2>
                         <div class="privacy-notice">
-                            <i class="fa-solid fa-lock"></i> Privacy Protected: Showing <strong>last 4 digits</strong>
+                            <i class="fa-solid fa-shield-halved"></i> গোপনীয়তা রক্ষা: কেবল <strong>শেষ ৪ টি অংক</strong> প্রদর্শিত
                         </div>
                     </div>
 
@@ -165,7 +156,7 @@
                         <div class="detail-item feature-item">
                             <div class="detail-icon"><i class="fa-solid fa-user"></i></div>
                             <div class="detail-content">
-                                <span class="detail-label">Applicant Name</span>
+                                <span class="detail-label">আবেদনকারীর নাম (Applicant Name)</span>
                                 <span class="detail-value highlight-value" id="valApplicantName">--</span>
                             </div>
                         </div>
@@ -174,7 +165,7 @@
                         <div class="detail-item">
                             <div class="detail-icon"><i class="fa-solid fa-hashtag"></i></div>
                             <div class="detail-content">
-                                <span class="detail-label">Application Number</span>
+                                <span class="detail-label">আবেদন নম্বর (Application No.)</span>
                                 <span class="detail-value masked-field" id="valAppNo">
                                     <span class="masked-text">●●●●●●●●</span><span class="visible-digits" id="valAppNoDigits">0000</span>
                                 </span>
@@ -185,7 +176,7 @@
                         <div class="detail-item">
                             <div class="detail-icon"><i class="fa-solid fa-mobile-screen"></i></div>
                             <div class="detail-content">
-                                <span class="detail-label">Mobile Number (Last 4 Digits)</span>
+                                <span class="detail-label">মোবাইল নম্বর (শেষ ৪ অংক)</span>
                                 <span class="detail-value masked-field" id="valMobile">
                                     <span class="masked-text">●●●●●●</span><span class="visible-digits" id="valMobileDigits">----</span>
                                 </span>
@@ -196,7 +187,7 @@
                         <div class="detail-item">
                             <div class="detail-icon"><i class="fa-solid fa-address-card"></i></div>
                             <div class="detail-content">
-                                <span class="detail-label">EPIC No. / Voter ID (Last 4 Digits)</span>
+                                <span class="detail-label">ভোটার কার্ড নম্বর (শেষ ৪ অংক)</span>
                                 <span class="detail-value masked-field" id="valEpic">
                                     <span class="masked-text">●●●●●●</span><span class="visible-digits" id="valEpicDigits">----</span>
                                 </span>
@@ -207,7 +198,7 @@
                         <div class="detail-item">
                             <div class="detail-icon"><i class="fa-solid fa-list-ol"></i></div>
                             <div class="detail-content">
-                                <span class="detail-label">Serial Record Ref.</span>
+                                <span class="detail-label">সিরিয়াল রেকর্ড রেফারেন্স</span>
                                 <span class="detail-value" id="valSlNo">--</span>
                             </div>
                         </div>
@@ -216,8 +207,8 @@
                         <div class="detail-item">
                             <div class="detail-icon"><i class="fa-solid fa-calendar-check"></i></div>
                             <div class="detail-content">
-                                <span class="detail-label">Verification Timestamp</span>
-                                <span class="detail-value" id="valVerifyDate">Official Record</span>
+                                <span class="detail-label">যাচাইকরণের তথ্য ও সময়</span>
+                                <span class="detail-value" id="valVerifyDate">সরকারি রেকর্ড অনুযায়ী যাচাইকৃত</span>
                             </div>
                         </div>
 
@@ -226,7 +217,7 @@
                     <!-- Full Address Block -->
                     <div class="address-card">
                         <div class="address-header">
-                            <i class="fa-solid fa-location-dot"></i> Registered Resident Address
+                            <i class="fa-solid fa-location-dot"></i> নিবন্ধিত স্থায়ী ঠিকানা (Address)
                         </div>
                         <div class="address-text" id="valAddress">
                             --
@@ -238,10 +229,10 @@
                 <!-- Action Bar -->
                 <div class="result-actions">
                     <button type="button" id="btnPrintSlip" class="btn btn-emerald btn-lg">
-                        <i class="fa-solid fa-print"></i> Print Official Status Slip
+                        <i class="fa-solid fa-print"></i> অফিসিয়াল তথ্য স্লিপ প্রিন্ট করুন
                     </button>
                     <button type="button" id="btnNewSearch" class="btn btn-outline btn-lg" onclick="resetSearch()">
-                        <i class="fa-solid fa-rotate-left"></i> Check Another Record
+                        <i class="fa-solid fa-rotate-left"></i> পুনরায় অনুসন্ধান করুন
                     </button>
                 </div>
 
@@ -255,18 +246,18 @@
                 <div class="not-found-icon">
                     <i class="fa-solid fa-magnifying-glass-location"></i>
                 </div>
-                <h3>No Matching Record Found</h3>
-                <p>We could not locate any application record matching your entered query: <strong id="querySearchVal"></strong></p>
+                <h3>কোন তথ্য পাওয়া যায়নি (Record Not Found)</h3>
+                <p>আপনার প্রদত্ত অনুসন্ধানের বিপরীতে কোনো রেকর্ড মেলেনি: <strong id="querySearchVal"></strong></p>
                 <div class="tips-box">
-                    <strong><i class="fa-solid fa-lightbulb"></i> Verification Tips:</strong>
+                    <strong><i class="fa-solid fa-lightbulb"></i> সহায়তা সংক্রান্ত পরামর্শ:</strong>
                     <ul>
-                        <li>Ensure your 10-digit mobile number or EPIC Voter ID is typed correctly.</li>
-                        <li>You can also search using the last 4 digits of your registered mobile.</li>
-                        <li>Double-check your Application Number if available.</li>
+                        <li>আপনার ১০-সংখ্যার সঠিক মোবাইল নম্বর অথবা ভোটার কার্ড নম্বর (EPIC No.) প্রদান করেছেন কিনা তা নিশ্চিত করুন।</li>
+                        <li>নম্বরে কোনো স্পেস বা অতিরিক্ত চিহ্ন ছাড়াই অনুসন্ধান করুন।</li>
+                        <li>প্রয়োজনে আবেদনপত্র নম্বরের শেষ অংকসমূহ যাচাই করে পুনরায় চেষ্টা করুন।</li>
                     </ul>
                 </div>
                 <button type="button" class="btn btn-primary" onclick="resetSearch()">
-                    <i class="fa-solid fa-arrow-left"></i> Try Again
+                    <i class="fa-solid fa-arrow-left"></i> পুনরায় চেষ্টা করুন
                 </button>
             </div>
         </section>
@@ -278,52 +269,54 @@
         <div class="slip-paper">
             <div class="slip-header">
                 <div class="slip-gov-seal">
-                    <img src="logo.png" alt="Seal" width="60" height="60">
+                    <img src="logo.png" alt="Govt Seal" width="75" height="75">
                 </div>
-                <h2>BELTAR PORTAL</h2>
-                <p>Official Application Status Verification Slip</p>
+                <h2>বেলতার পোর্টাল - পশ্চিমবঙ্গ সরকার</h2>
+                <p>BELTAR PORTAL - GOVERNMENT OF WEST BENGAL</p>
+                <span class="slip-subtitle-tag">অফিসিয়াল অনলাইন আবেদন স্থিতি যাচাইকরণ প্রমাণপত্র</span>
                 <div class="slip-date" id="slipDate">--</div>
             </div>
             
             <div class="slip-status-box" id="slipStatusBox">
-                STATUS: <span id="slipStatusBadgeText">APPROVED</span>
+                বর্তমান স্থিতি: <span id="slipStatusBadgeText">অনুমোদিত (APPROVED)</span>
             </div>
 
             <table class="slip-table">
                 <tr>
-                    <th>Applicant Name:</th>
+                    <th>আবেদনকারীর নাম (Applicant Name):</th>
                     <td id="slipName">--</td>
                 </tr>
                 <tr>
-                    <th>Application No:</th>
+                    <th>আবেদন নম্বর (Application No):</th>
                     <td id="slipAppNo">--</td>
                 </tr>
                 <tr>
-                    <th>Mobile (Last 4 digits):</th>
+                    <th>মোবাইল নম্বর (শেষ ৪ অংক):</th>
                     <td id="slipMobile">--</td>
                 </tr>
                 <tr>
-                    <th>EPIC Voter ID (Last 4 digits):</th>
+                    <th>ভোটার কার্ড নম্বর (শেষ ৪ অংক):</th>
                     <td id="slipEpic">--</td>
                 </tr>
                 <tr>
-                    <th>Serial Reference No:</th>
+                    <th>সিরিয়াল রেফারেন্স নম্বর:</th>
                     <td id="slipSlNo">--</td>
                 </tr>
                 <tr>
-                    <th>Residential Address:</th>
+                    <th>নিবন্ধিত ঠিকানা (Address):</th>
                     <td id="slipAddress">--</td>
                 </tr>
             </table>
 
             <div class="slip-footer">
                 <div class="qr-box">
-                    <img id="slipQrCode" src="" alt="Verification QR Code" width="90" height="90">
-                    <span>Scan to Verify Online</span>
+                    <img id="slipQrCode" src="" alt="Verification QR Code" width="100" height="100">
+                    <span>অনলাইন সত্যতা যাচাই QR</span>
                 </div>
                 <div class="stamp-box">
-                    <div class="official-seal">BELTAR PORTAL<br>VERIFIED SLIP</div>
-                    <span>System Authorized Signature</span>
+                    <img src="logo.png" alt="Seal" width="50" height="50" style="opacity: 0.85;">
+                    <div class="official-seal">বেলতার পোর্টাল<br>অফিসিয়াল ডিজিটাল ভেরিফায়েড</div>
+                    <span>স্বয়ংক্রিয় সিস্টেম অনুমোদিত</span>
                 </div>
             </div>
         </div>
@@ -333,8 +326,14 @@
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-brand">
-                <span>BELTAR PORTAL &copy; 2026</span>
-                <p>Official Citizen Application Status Verification System</p>
+                <div class="footer-logo-row">
+                    <img src="logo.png" alt="Biswa Bangla Logo" class="footer-seal">
+                    <span>বেলতার পোর্টাল • পশ্চিমবঙ্গ সরকার</span>
+                </div>
+                <p>নাগরিক অধিকার ও স্বচ্ছতা নিশ্চিতকরণে পশ্চিমবঙ্গ সরকারের তথ্য ও প্রযুক্তি সেবা।</p>
+            </div>
+            <div class="footer-copy">
+                &copy; 2026 BELTAR PORTAL, Govt of West Bengal. All Rights Reserved.
             </div>
         </div>
     </footer>
