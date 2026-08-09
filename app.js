@@ -125,7 +125,7 @@ function renderSearchResult(record) {
     if (sLower.includes('approved') && !sLower.includes('pending')) {
         statusBadge.classList.add('approved');
         statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span id="statusBadgeText">অনুমোদিত (APPROVED)</span>';
-        statusSummaryText.textContent = "আপনার আবেদনপত্রটি সফলভাবে যাচাই করা হয়েছে এবং সংশ্লিষ্ট কর্তৃপক্ষ দ্বারা অনুমোদিত হয়েছে।";
+        statusSummaryText.textContent = "আপনার অন্নপূর্ণা যোজনার আবেদনপত্রটি সফলভাবে যাচাই করা হয়েছে এবং সংশ্লিষ্ট কর্তৃপক্ষ দ্বারা অনুমোদিত হয়েছে।";
         
         step1.className = "timeline-step step-done";
         line1.className = "timeline-line line-done";
@@ -136,7 +136,7 @@ function renderSearchResult(record) {
     } else if (sLower.includes('pending') || sLower.includes('verified')) {
         statusBadge.classList.add('pending');
         statusBadge.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i> <span id="statusBadgeText">যাচাইকৃত - অনুমোদন অপেক্ষমান</span>';
-        statusSummaryText.textContent = "আপনার নথিগুলি ক্ষেত্রপর্যায়ে সফলভাবে যাচাই করা হয়েছে এবং চূড়ান্ত অনুমোদনের জন্য প্রক্রিয়াধীন রয়েছে।";
+        statusSummaryText.textContent = "আপনার অন্নপূর্ণা যোজনার নথিগুলি ক্ষেত্রপর্যায়ে সফলভাবে যাচাই করা হয়েছে এবং চূড়ান্ত অনুমোদনের জন্য প্রক্রিয়াধীন রয়েছে।";
         
         step1.className = "timeline-step step-done";
         line1.className = "timeline-line line-done";
@@ -147,7 +147,7 @@ function renderSearchResult(record) {
     } else if (sLower.includes('process') || sLower.includes('under')) {
         statusBadge.classList.add('process');
         statusBadge.innerHTML = '<i class="fa-solid fa-gear fa-spin"></i> <span id="statusBadgeText">প্রক্রিয়াধীন (UNDER PROCESS)</span>';
-        statusSummaryText.textContent = "আপনার আবেদনটি ক্ষেত্র যাচাইকরণ এবং সক্রিয় প্রক্রিয়াকরণ পর্যায়ে রয়েছে।";
+        statusSummaryText.textContent = "আপনার অন্নপূর্ণা যোজনার আবেদনটি ক্ষেত্র যাচাইকরণ এবং সক্রিয় প্রক্রিয়াকরণ পর্যায়ে রয়েছে।";
         
         step1.className = "timeline-step step-done";
         line1.className = "timeline-line line-done";
@@ -157,7 +157,7 @@ function renderSearchResult(record) {
     } else {
         statusBadge.classList.add('rejected');
         statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> <span id="statusBadgeText">প্রত্যাখ্যাত (REJECTED)</span>';
-        statusSummaryText.textContent = "আপনার আবেদনে সংশোধনের প্রয়োজন রয়েছে। অনুগ্রহ করে আপনার নিকটস্থ আঞ্চলিক কার্যালয়ে যোগাযোগ করুন।";
+        statusSummaryText.textContent = "আপনার অন্নপূর্ণা যোজনার আবেদনে সংশোধনের প্রয়োজন রয়েছে। অনুগ্রহ করে আপনার নিকটস্থ আঞ্চলিক কার্যালয়ে যোগাযোগ করুন।";
     }
 
     // Applicant Information

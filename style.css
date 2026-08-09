@@ -1,5 +1,5 @@
 /* ==============================================================================
-   BELTAR PORTAL - GOVERNMENT OF WEST BENGAL OFFICIAL DESIGN SYSTEM
+   BELTAR PORTAL - ANNAPURNA YOJANA (GOVERNMENT OF WEST BENGAL)
    ============================================================================== */
 
 :root {
@@ -7,14 +7,14 @@
     --font-heading: 'Hind Siliguri', 'Outfit', sans-serif;
     --font-body: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif;
 
-    /* Light Theme (Default Official Government Palette) */
+    /* Light Theme Palette */
     --top-bar-bg: #071e3d;
     --top-bar-text: #ffffff;
     
     --bg-primary: #f4f6f9;
     --bg-secondary: #ffffff;
-    --bg-card: #ffffff;
-    --bg-card-hover: #fafbfc;
+    --bg-card: rgba(255, 255, 255, 0.94);
+    --bg-card-hover: #ffffff;
     
     --primary: #0b2545;
     --primary-hover: #134074;
@@ -25,7 +25,7 @@
     --text-muted: #475569;
     --text-dim: #94a3b8;
 
-    /* Status Colors - Light Mode */
+    /* Status Colors */
     --status-approved-bg: #dcfce7;
     --status-approved-border: #22c55e;
     --status-approved-text: #15803d;
@@ -53,19 +53,19 @@
     --radius-lg: 16px;
     --radius-xl: 22px;
     
-    --shadow-sm: 0 4px 15px rgba(7, 30, 61, 0.06);
+    --shadow-sm: 0 4px 20px rgba(7, 30, 61, 0.08);
     --shadow-glow: 0 4px 20px rgba(11, 37, 69, 0.15);
 }
 
 /* Dark Theme Overrides */
-[data-theme="dark"] {
+[data-theme="dark"], body.dark-mode {
     --top-bar-bg: #030712;
     --top-bar-text: #f3f4f6;
     
     --bg-primary: #090d16;
     --bg-secondary: #111827;
-    --bg-card: rgba(17, 24, 39, 0.85);
-    --bg-card-hover: rgba(31, 41, 55, 0.95);
+    --bg-card: rgba(17, 24, 39, 0.92);
+    --bg-card-hover: rgba(31, 41, 55, 0.96);
     
     --primary: #6366f1;
     --primary-hover: #4f46e5;
@@ -76,7 +76,6 @@
     --text-muted: #9ca3af;
     --text-dim: #6b7280;
 
-    /* Status Colors - Dark Mode */
     --status-approved-bg: rgba(16, 185, 129, 0.15);
     --status-approved-border: #10b981;
     --status-approved-text: #34d399;
@@ -95,14 +94,14 @@
 
     --border-color: rgba(255, 255, 255, 0.1);
     --border-highlight: rgba(99, 102, 241, 0.5);
-    --input-bg: rgba(0, 0, 0, 0.35);
+    --input-bg: rgba(0, 0, 0, 0.4);
     --input-border: rgba(255, 255, 255, 0.15);
     
-    --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.35);
     --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.25);
 }
 
-/* Hide scrollbars globally across all browsers */
+/* Hide scrollbars globally */
 ::-webkit-scrollbar {
     display: none;
     width: 0;
@@ -110,8 +109,8 @@
 }
 
 html, body {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
     touch-action: manipulation;
     user-select: none;
 }
@@ -120,7 +119,7 @@ input, textarea, p, span, h1, h2, h3, h4, td, th, a, button {
     user-select: text;
 }
 
-/* Reset & Remove Blue Outlines / Tap Highlights */
+/* Reset & Remove Blue Focus Borders */
 * {
     margin: 0;
     padding: 0;
@@ -134,21 +133,27 @@ input, textarea, p, span, h1, h2, h3, h4, td, th, a, button {
     box-shadow: none !important;
 }
 
+/* Subtle Background Image Overlay */
 body {
     font-family: var(--font-body);
-    background-color: var(--bg-primary);
     color: var(--text-main);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     line-height: 1.6;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background 0.3s ease, color 0.3s ease;
     overflow-x: hidden;
 }
 
-/* Font Size Modifiers */
-body.font-sm { font-size: 14px; }
-body.font-lg { font-size: 18px; }
+body.light-mode {
+    background: linear-gradient(rgba(244, 246, 249, 0.90), rgba(244, 246, 249, 0.90)), url('bg.jpg'), url('https://i.postimg.cc/k5Z0jNkf/Generated-Image-August-09-2026-4-03PM.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+body.dark-mode, [data-theme="dark"] body {
+    background: linear-gradient(rgba(9, 13, 22, 0.90), rgba(9, 13, 22, 0.90)), url('bg.jpg'), url('https://i.postimg.cc/k5Z0jNkf/Generated-Image-August-09-2026-4-03PM.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
 
 .hidden { display: none !important; }
 .highlight { color: #d97706; }
@@ -166,6 +171,7 @@ body.font-lg { font-size: 18px; }
 
 .govt-bar-container {
     max-width: 1100px;
+    width: 92%;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
@@ -189,29 +195,6 @@ body.font-lg { font-size: 18px; }
 .govt-accessibility {
     display: flex;
     align-items: center;
-    gap: 1rem;
-}
-
-.font-sizer {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.btn-text-size {
-    background: rgba(255, 255, 255, 0.12);
-    color: #fff;
-    border: none;
-    padding: 0.15rem 0.45rem;
-    border-radius: 4px;
-    font-weight: 700;
-    cursor: pointer;
-    font-size: 0.78rem;
-}
-
-.btn-text-size.active, .btn-text-size:hover {
-    background: #d97706;
-    color: #fff;
 }
 
 .btn-theme-toggle {
@@ -245,8 +228,9 @@ body.font-lg { font-size: 18px; }
 
 .nav-container {
     max-width: 1100px;
+    width: 92%;
     margin: 0 auto;
-    padding: 0.85rem 1.5rem;
+    padding: 0.85rem 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -289,13 +273,13 @@ body.font-lg { font-size: 18px; }
 .brand-name {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 1.4rem;
+    font-size: clamp(1.1rem, 2.5vw, 1.45rem);
     color: var(--text-main);
     line-height: 1.2;
 }
 
 .brand-tagline {
-    font-size: 0.75rem;
+    font-size: clamp(0.7rem, 1.8vw, 0.8rem);
     font-weight: 600;
     color: var(--text-muted);
 }
@@ -313,12 +297,12 @@ body.font-lg { font-size: 18px; }
     gap: 0.4rem;
 }
 
-/* Main Content */
+/* Main Content Layout */
 .main-content {
-    max-width: 1000px;
-    width: 100%;
+    max-width: 1050px;
+    width: 92%;
     margin: 0 auto;
-    padding: 2.5rem 1.25rem;
+    padding: 2.5rem 0;
     flex: 1;
 }
 
@@ -359,25 +343,26 @@ body.font-lg { font-size: 18px; }
 
 .hero-title {
     font-family: var(--font-heading);
-    font-size: 2.5rem;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
     font-weight: 700;
     color: var(--text-main);
     margin-bottom: 0.5rem;
 }
 
 .hero-subtitle {
-    font-size: 1.05rem;
+    font-size: clamp(0.92rem, 2vw, 1.08rem);
     color: var(--text-muted);
     max-width: 680px;
     margin: 0 auto;
 }
 
-/* Search Card */
+/* Search Card Component */
 .search-card {
     background: var(--bg-card);
+    backdrop-filter: blur(12px);
     border: 2px solid var(--border-color);
     border-radius: var(--radius-xl);
-    padding: 2.25rem;
+    padding: clamp(1.25rem, 3vw, 2.25rem);
     box-shadow: var(--shadow-sm);
     transition: all 0.3s ease;
 }
@@ -408,14 +393,14 @@ body.font-lg { font-size: 18px; }
     border-radius: var(--radius-lg);
     color: var(--text-main);
     font-family: var(--font-body);
-    font-size: 1.05rem;
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
     outline: none;
     transition: all 0.25s ease;
 }
 
 .search-input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 4px var(--primary-light);
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px var(--primary-light) !important;
 }
 
 .btn-clear {
@@ -469,9 +454,10 @@ body.font-lg { font-size: 18px; }
 
 .glass-panel {
     background: var(--bg-card);
+    backdrop-filter: blur(12px);
     border: 2px solid var(--border-color);
     border-radius: var(--radius-xl);
-    padding: 2.25rem;
+    padding: clamp(1.25rem, 3vw, 2.25rem);
     box-shadow: var(--shadow-sm);
 }
 
@@ -513,7 +499,7 @@ body.font-lg { font-size: 18px; }
     font-size: 1.05rem;
 }
 
-/* Status Badges Styling */
+/* Status Badges */
 .status-badge.approved {
     background: var(--status-approved-bg);
     border: 1.5px solid var(--status-approved-border);
@@ -641,7 +627,7 @@ body.font-lg { font-size: 18px; }
 
 .details-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 1.25rem;
     margin-bottom: 1.5rem;
 }
@@ -831,50 +817,6 @@ body.font-lg { font-size: 18px; }
     color: var(--text-muted);
 }
 
-/* Footer */
-.footer {
-    border-top: 2px solid var(--border-color);
-    background: var(--bg-secondary);
-    padding: 2rem 1.5rem;
-    margin-top: 3rem;
-}
-
-.footer-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-}
-
-.footer-logo-row {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-weight: 700;
-    font-size: 1.05rem;
-    margin-bottom: 0.35rem;
-}
-
-.footer-seal {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-}
-
-.footer-brand p {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-}
-
-.footer-copy {
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    font-weight: 600;
-}
-
 /* Print Slip Styles */
 @media print {
     body * {
@@ -909,10 +851,8 @@ body.font-lg { font-size: 18px; }
     .qr-box, .stamp-box { display: flex; flex-direction: column; align-items: center; font-size: 11px; }
 }
 
-/* Mobile Media Queries */
+/* Comprehensive Responsive Breakpoints */
 @media (max-width: 768px) {
-    .hero-title { font-size: 1.9rem; }
-    .search-card { padding: 1.25rem; }
     .input-group { flex-direction: column; gap: 0.75rem; }
     .input-icon { top: 1.1rem; }
     .search-input { padding: 1rem 1rem 1rem 2.8rem; }
